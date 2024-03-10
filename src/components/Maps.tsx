@@ -9,7 +9,7 @@ import {
 } from "react-leaflet";
 import { Separator } from "./ui/separator";
 import { useState } from "react";
-import cities from '@/data/cities'
+import cities from "@/data/cities";
 import legend from "@/data/sample-data-legend";
 
 const markers = [
@@ -34,8 +34,15 @@ const markers = [
 ];
 
 const Maps = () => {
-  const [currentActiveMarker, setCurrentActiveMarker] = useState("");
-  // const [currentLegend, setCLegend] = useState(Legend.semuaAP);
+  const [currentActiveMarker, setCurrentActiveMarker] = useState("all");
+
+  const handleMarkerClick = (marker: any) => {
+    if (currentActiveMarker === marker.branch) {
+      setCurrentActiveMarker("all");
+    } else {
+      setCurrentActiveMarker(marker.branch);
+    }
+  };
 
   const positionClass = "leaflet-top leaflet-left";
 
@@ -52,12 +59,11 @@ const Maps = () => {
     }
   };
 
-  const average = legend[currentActiveMarker]?.average
-  const total = legend[currentActiveMarker]?.total
-  const percentile100 = legend[currentActiveMarker]?.percentile100
-  const percentile89 = legend[currentActiveMarker]?.percentile89
-  const percentile69 = legend[currentActiveMarker]?.percentile69
-
+  const average = legend[currentActiveMarker]?.average;
+  const total = legend[currentActiveMarker]?.total;
+  const percentile100 = legend[currentActiveMarker]?.percentile100;
+  const percentile89 = legend[currentActiveMarker]?.percentile89;
+  const percentile69 = legend[currentActiveMarker]?.percentile69;
 
   const MinimapControl = () => {
     return (
@@ -67,7 +73,7 @@ const Maps = () => {
             <p>Rata - Rata Layanan PPL Semua Unit</p>
             <Separator />
             <div className="flex justify-center items-center">
-              <p className="text-2xl text-[#0B7F8E]">{ average }</p>
+              <p className="text-2xl text-[#0B7F8E]">{average}</p>
             </div>
           </div>
         </div>
@@ -76,7 +82,7 @@ const Maps = () => {
             <p>Total AP</p>
             <Separator />
             <div className="flex justify-center items-center">
-              <p className=" text-2xl text-[#0B7F8E]">{ total } AP</p>
+              <p className=" text-2xl text-[#0B7F8E]">{total} AP</p>
             </div>
           </div>
         </div>
@@ -85,7 +91,7 @@ const Maps = () => {
             <p>Pelayanan PPL 90% - 100%</p>
             <Separator />
             <div className="flex justify-center items-center">
-              <p className=" text-2xl text-[#00B039]">{ percentile100 } AP</p>
+              <p className=" text-2xl text-[#00B039]">{percentile100} AP</p>
             </div>
           </div>
         </div>
@@ -94,7 +100,7 @@ const Maps = () => {
             <p>Pelayanan PPL 70% - 89%</p>
             <Separator />
             <div className="flex justify-center items-center">
-              <p className=" text-2xl text-[#FA6533]">{ percentile89 }</p>
+              <p className=" text-2xl text-[#FA6533]">{percentile89}</p>
             </div>
           </div>
         </div>
@@ -103,7 +109,7 @@ const Maps = () => {
             <p>Pelayanan PPL &lt; 69%</p>
             <Separator />
             <div className="flex justify-center items-center">
-              <p className=" text-2xl text-[]">{ percentile69 }</p>
+              <p className=" text-2xl text-[]">{percentile69}</p>
             </div>
           </div>
         </div>
@@ -126,20 +132,19 @@ const Maps = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+
           {markers.map((marker) => (
             <Marker
               key={marker.branch}
               position={marker.geocode as LatLngTuple}
               eventHandlers={{
-                click: (e) => {
-                  console.log("marker clicked", e);
-                  setCurrentActiveMarker(marker.branch);
-                },
+                click: () => handleMarkerClick(marker),
               }}
             >
               <Popup>{marker.popUp}</Popup>
             </Marker>
           ))}
+
           <MinimapControl />
           {currentActiveMarker &&
             currentCoordinates &&
