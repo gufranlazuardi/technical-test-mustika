@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import Maps from "@/components/Maps";
 
-import Tabel from "@/components/Tabel";
+import Tabel from "@/components/Table";
 
 const Home = () => {
   return (
